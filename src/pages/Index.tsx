@@ -7,6 +7,7 @@ import { BackgroundVideo } from "@/components/BackgroundVideo";
 import { SuggestedQuestions } from "@/components/SuggestedQuestions";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { Navbar } from "@/components/Navbar";
 
 interface Message {
   content: string;
@@ -68,8 +69,9 @@ const Index = () => {
           onThemeToggle={toggleTheme}
         />
         <main className="flex-1 relative">
+          <Navbar />
           {messages.length === 0 && <BackgroundVideo />}
-          <div className="min-h-screen relative z-10">
+          <div className="min-h-screen relative z-10 pt-16">
             <div className="max-w-4xl mx-auto pt-8 pb-24">
               {messages.length === 0 ? (
                 <WelcomeScreen />
