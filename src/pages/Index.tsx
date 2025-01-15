@@ -24,6 +24,7 @@ const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
     if (isDarkMode) {
@@ -36,6 +37,7 @@ const Index = () => {
   const handleSendMessage = async (content: string) => {
     setMessages((prev) => [...prev, { content, isUser: true }]);
     setIsTyping(true);
+    setInputMessage("");
     
     setTimeout(() => {
       setIsTyping(false);
@@ -49,6 +51,10 @@ const Index = () => {
     }, 2000);
   };
 
+  const handleQuestionClick = (question: string) => {
+    setInputMessage(question);
+  };
+
   const toggleTheme = () => {
     setIsDarkMode((prev) => !prev);
   };
@@ -57,12 +63,12 @@ const Index = () => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AppSidebar
-          onQuestionClick={handleSendMessage}
+          onQuestionClick={handleQuestionClick}
           isDarkMode={isDarkMode}
           onThemeToggle={toggleTheme}
         />
         <main className="flex-1 relative">
-          <BackgroundVideo />
+          {messages.length === 0 && <BackgroundVideo />}
           <div className="min-h-screen relative z-10">
             <div className="max-w-4xl mx-auto pt-8 pb-24">
               {messages.length === 0 ? (
@@ -86,14 +92,19 @@ const Index = () => {
                   {!isTyping && messages.length > 0 && (
                     <SuggestedQuestions
                       questions={SUGGESTED_QUESTIONS}
-                      onQuestionClick={handleSendMessage}
+                      onQuestionClick={handleQuestionClick}
                     />
                   )}
                 </div>
               )}
             </div>
             <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-white to-transparent pt-12 pb-4 dark:from-gray-900">
-              <ChatInput onSend={handleSendMessage} disabled={isTyping} />
+              <ChatInput 
+                onSend={handleSendMessage} 
+                disabled={isTyping} 
+                value={inputMessage}
+                onChange={setInputMessage}
+              />
             </div>
           </div>
         </main>
