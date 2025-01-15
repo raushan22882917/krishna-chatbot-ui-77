@@ -15,7 +15,7 @@ export const Navbar = () => {
             <Menu className="w-6 h-6 text-gita-primary dark:text-gita-light" />
           </button>
           <div className="flex items-center gap-2">
-            <img src="download.png" alt="Krishna Logo" className="w-8 h-8" />
+            <img src=".png" alt="Krishna Logo" className="w-8 h-8" />
             <h1 className="text-lg font-semibold text-gita-primary dark:text-gita-light hidden sm:block">
               Gita Guide
             </h1>
