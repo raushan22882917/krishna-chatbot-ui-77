@@ -26,7 +26,6 @@ const Index = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // Apply dark mode class to html element
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
     } else {
@@ -62,9 +61,9 @@ const Index = () => {
           isDarkMode={isDarkMode}
           onThemeToggle={toggleTheme}
         />
-        <div className="flex-1 relative">
+        <main className="flex-1 relative">
           <BackgroundVideo />
-          <div className="min-h-screen">
+          <div className="min-h-screen relative z-10">
             <div className="max-w-4xl mx-auto pt-8 pb-24">
               {messages.length === 0 ? (
                 <WelcomeScreen />
@@ -97,7 +96,7 @@ const Index = () => {
               <ChatInput onSend={handleSendMessage} disabled={isTyping} />
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </SidebarProvider>
   );

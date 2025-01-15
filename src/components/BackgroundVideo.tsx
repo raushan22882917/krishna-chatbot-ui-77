@@ -8,7 +8,7 @@ export const BackgroundVideo = () => {
         loop
         muted
         playsInline
-        className="absolute min-h-full min-w-full object-cover opacity-20 dark:opacity-10"
+        className="absolute min-h-full min-w-full object-cover opacity-70 dark:opacity-50"
       >
         <source src="krishna.mp4" type="video/mp4" />
       </video>

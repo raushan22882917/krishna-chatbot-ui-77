@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Moon, Sun, MessageCircle } from "lucide-react";
 import {
@@ -31,8 +31,7 @@ const SUGGESTED_QUESTIONS = [
 export function AppSidebar({ onQuestionClick, isDarkMode, onThemeToggle }: AppSidebarProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Update time every minute
-  useState(() => {
+  useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 60000);
