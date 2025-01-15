@@ -18,7 +18,7 @@ export const ChatInput = ({ onSend, disabled, value, onChange }: ChatInputProps)
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative flex w-full max-w-4xl mx-auto p-4"
+      className="relative flex w-full max-w-3xl mx-auto p-4"
     >
       <input
         type="text"
@@ -26,7 +26,7 @@ export const ChatInput = ({ onSend, disabled, value, onChange }: ChatInputProps)
         onChange={(e) => onChange(e.target.value)}
         placeholder="Ask about the Bhagavad Gita..."
         disabled={disabled}
-        className="w-full px-4 py-3 rounded-xl bg-white/80 dark:bg-gray-800/80 dark:text-white backdrop-blur-sm border border-gita-soft dark:border-gray-700 focus:border-gita-primary focus:ring-1 focus:ring-gita-primary outline-none transition-all duration-200"
+        className="w-full px-6 py-3 rounded-xl bg-white/80 dark:bg-gray-800/80 dark:text-white backdrop-blur-sm border border-gita-soft dark:border-gray-700 focus:border-gita-primary focus:ring-1 focus:ring-gita-primary outline-none transition-all duration-200"
       />
       <button
         type="submit"

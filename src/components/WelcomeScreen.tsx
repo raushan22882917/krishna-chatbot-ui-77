@@ -6,7 +6,7 @@ export const WelcomeScreen = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="text-center space-y-8 px-4"
+      className="text-center space-y-8 px-4 flex flex-col items-center justify-center min-h-[70vh]"
     >
       <motion.div
         initial={{ scale: 0.9 }}
@@ -17,10 +17,10 @@ export const WelcomeScreen = () => {
         <BookOpen className="w-12 h-12 text-gita-primary" />
       </motion.div>
       <div className="space-y-4">
-        <h1 className="text-3xl font-semibold text-gray-800">
+        <h1 className="text-3xl font-semibold text-gray-800 dark:text-gray-100">
           Welcome to Bhagavad Gita AI
         </h1>
-        <p className="text-gray-600 max-w-md mx-auto">
+        <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto">
           Ask questions about the sacred text and receive guidance based on its
           timeless wisdom.
         </p>

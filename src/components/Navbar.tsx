@@ -16,7 +16,7 @@ export const Navbar = () => {
           </button>
           <div className="flex items-center gap-2">
             <img src="download.png" alt="Krishna Logo" className="w-8 h-8" />
-            <h1 className="text-lg font-semibold text-gita-primary dark:text-gita-light hidden sm:block">
+            <h1 className="text-lg font-semibold hidden sm:block bg-gradient-to-r from-gita-primary via-gita-secondary to-gita-accent bg-clip-text text-transparent">
               Gita Guide
             </h1>
           </div>
