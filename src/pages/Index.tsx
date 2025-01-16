@@ -47,12 +47,15 @@ const Index = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Access-Control-Allow-Origin": "*"
         },
+        mode: "cors",
         body: JSON.stringify({ message: content }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to get response");
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -67,12 +70,22 @@ const Index = () => {
       ]);
     } catch (error) {
       setIsTyping(false);
+      let errorMessage = "Failed to get response. Please try again later.";
+      
+      if (error instanceof Error) {
+        if (error.message.includes("Failed to fetch")) {
+          errorMessage = "Unable to connect to the server. Please check your internet connection or try again later.";
+        } else if (error.message.includes("HTTP error")) {
+          errorMessage = "The server is currently unavailable. Please try again in a few minutes.";
+        }
+        console.error("Error details:", error);
+      }
+
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to get response. Please try again later.",
+        description: errorMessage,
       });
-      console.error("Error fetching response:", error);
     }
   };
 
