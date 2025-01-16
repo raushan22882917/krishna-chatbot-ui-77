@@ -47,15 +47,13 @@ const Index = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Access-Control-Allow-Origin": "*"
         },
-        mode: "cors",
-        body: JSON.stringify({ message: content }),
+        body: JSON.stringify({ query: content }), // Changed from 'message' to 'query'
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, details: ${errorData}`);
       }
 
       const data = await response.json();
@@ -75,10 +73,10 @@ const Index = () => {
       if (error instanceof Error) {
         if (error.message.includes("Failed to fetch")) {
           errorMessage = "Unable to connect to the server. Please check your internet connection or try again later.";
-        } else if (error.message.includes("HTTP error")) {
+        } else {
+          console.error("Error details:", error);
           errorMessage = "The server is currently unavailable. Please try again in a few minutes.";
         }
-        console.error("Error details:", error);
       }
 
       toast({
