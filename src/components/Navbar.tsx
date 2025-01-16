@@ -1,8 +1,10 @@
-import { Menu } from "lucide-react";
+import { Menu, Moon, Sun } from "lucide-react";
 import { useSidebar } from "@/components/ui/sidebar";
+import { useTheme } from "@/hooks/useTheme";
 
 export const Navbar = () => {
   const { toggleSidebar } = useSidebar();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gita-soft dark:border-gray-700">
@@ -16,11 +18,21 @@ export const Navbar = () => {
           </button>
           <div className="flex items-center gap-2">
             <img src="download.png" alt="Krishna Logo" className="w-8 h-8" />
-            <h1 className="text-lg font-semibold hidden sm:block bg-gradient-to-r from-gita-primary via-gita-secondary to-gita-accent bg-clip-text text-transparent">
+            <h1 className="text-lg font-semibold text-gita-primary dark:text-gita-light hidden sm:block">
               Gita Guide
             </h1>
           </div>
         </div>
+        <button
+          onClick={toggleTheme}
+          className="p-2 hover:bg-gita-soft/50 rounded-lg transition-colors"
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-6 h-6 text-gita-light" />
+          ) : (
+            <Moon className="w-6 h-6 text-gita-primary" />
+          )}
+        </button>
       </div>
     </nav>
   );
