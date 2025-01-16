@@ -8,6 +8,7 @@ import { SuggestedQuestions } from "@/components/SuggestedQuestions";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Navbar } from "@/components/Navbar";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Message {
   content: string;
@@ -26,6 +27,7 @@ const Index = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     if (isDarkMode) {
@@ -36,20 +38,42 @@ const Index = () => {
   }, [isDarkMode]);
 
   const handleSendMessage = async (content: string) => {
-    setMessages((prev) => [...prev, { content, isUser: true }]);
-    setIsTyping(true);
-    setInputMessage("");
-    
-    setTimeout(() => {
+    try {
+      setMessages((prev) => [...prev, { content, isUser: true }]);
+      setIsTyping(true);
+      setInputMessage("");
+
+      const response = await fetch("https://samay-ai-twgu.onrender.com/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: content }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get response");
+      }
+
+      const data = await response.json();
+      
       setIsTyping(false);
       setMessages((prev) => [
         ...prev,
         {
-          content: "This is a simulated response from Krishna's teachings. In a real implementation, this would be connected to an AI backend.",
+          content: data.response || "I apologize, but I couldn't process your request at the moment.",
           isUser: false,
         },
       ]);
-    }, 2000);
+    } catch (error) {
+      setIsTyping(false);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to get response. Please try again later.",
+      });
+      console.error("Error fetching response:", error);
+    }
   };
 
   const handleQuestionClick = (question: string) => {
