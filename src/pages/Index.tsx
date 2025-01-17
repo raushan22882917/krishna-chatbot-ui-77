@@ -69,7 +69,11 @@ const Index = () => {
       // Update suggested questions if a new question is provided in the response
       if (data.question) {
         setSuggestedQuestions(prevQuestions => {
-          const newQuestions = [data.question!, ...prevQuestions.slice(0, 3)];
+          // Create a new array with the new question and existing questions
+          const newQuestions = [
+            data.question!,
+            ...prevQuestions.slice(0, 2) // Keep only the first 2 existing questions
+          ];
           return Array.from(new Set(newQuestions)); // Remove duplicates
         });
       }
@@ -104,6 +108,7 @@ const Index = () => {
         <AppSidebar onQuestionClick={handleQuestionClick} />
         <main className="flex-1 relative">
           <Navbar />
+          {messages.length === 0 && <BackgroundVideo />}
           <div className="min-h-screen relative z-10 pt-16">
             <div className="max-w-4xl mx-auto pt-8 pb-24">
               {messages.length === 0 ? (
