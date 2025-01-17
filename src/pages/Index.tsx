@@ -25,8 +25,17 @@ const SUGGESTED_QUESTIONS = [
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkMode]);
 
   const handleSendMessage = async (content: string) => {
     try {
@@ -39,7 +48,7 @@ const Index = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query: content }),
+        body: JSON.stringify({ query: content }), // Changed from 'message' to 'query'
       });
 
       if (!response.ok) {
@@ -82,10 +91,18 @@ const Index = () => {
     setInputMessage(question);
   };
 
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => !prev);
+  };
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
-        <AppSidebar onQuestionClick={handleQuestionClick} />
+        <AppSidebar
+          onQuestionClick={handleQuestionClick}
+          isDarkMode={isDarkMode}
+          onThemeToggle={toggleTheme}
+        />
         <main className="flex-1 relative">
           <Navbar />
           {messages.length === 0 && <BackgroundVideo />}

@@ -8,7 +8,7 @@ interface AppSidebarProps {
 }
 
 export const AppSidebar = ({ onQuestionClick }: AppSidebarProps) => {
-  const { open } = useSidebar();
+  const { isOpen } = useSidebar();
 
   const questions = [
     "What is karma yoga?",
@@ -25,7 +25,7 @@ export const AppSidebar = ({ onQuestionClick }: AppSidebarProps) => {
     <aside
       className={cn(
         "fixed top-0 left-0 z-40 h-screen pt-16 transition-transform bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-r border-gita-soft dark:border-gray-700",
-        open ? "translate-x-0" : "-translate-x-full"
+        isOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
       <ScrollArea className="flex flex-col h-full px-4 pb-4">

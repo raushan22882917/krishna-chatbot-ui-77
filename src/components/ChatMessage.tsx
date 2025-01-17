@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Bot, User, BookOpen, Music } from "lucide-react";
+import { Bot, User, BookOpen, Flute } from "lucide-react";
 
 interface ChatMessageProps {
   content: string;
@@ -42,7 +42,7 @@ export const ChatMessage = ({ content, isUser, className }: ChatMessageProps) =>
             <BookOpen className="h-5 w-5 text-gita-primary" />
           </div>
           <div className="flex-shrink-0 rounded-full bg-gita-soft p-2">
-            <Music className="h-5 w-5 text-gita-primary" />
+            <Flute className="h-5 w-5 text-gita-primary" />
           </div>
         </div>
       )}
