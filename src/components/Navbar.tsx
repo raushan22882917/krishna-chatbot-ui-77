@@ -1,10 +1,43 @@
-import { Menu, Moon, Sun } from "lucide-react";
+import { Menu, MessageSquare } from "lucide-react";
 import { useSidebar } from "@/components/ui/sidebar";
-import { useTheme } from "@/hooks/useTheme";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 export const Navbar = () => {
   const { toggleSidebar } = useSidebar();
-  const { theme, toggleTheme } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
+
+  const handleSubmitFeedback = async () => {
+    try {
+      const { error } = await supabase
+        .from('feedback')
+        .insert([
+          { content: feedback }
+        ]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Thank you for your feedback!",
+        description: "Your feedback has been submitted successfully.",
+      });
+
+      setFeedback("");
+      setIsOpen(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to submit feedback. Please try again.",
+      });
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gita-soft dark:border-gray-700">
@@ -23,17 +56,37 @@ export const Navbar = () => {
             </h1>
           </div>
         </div>
-        <button
-          onClick={toggleTheme}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsOpen(true)}
           className="p-2 hover:bg-gita-soft/50 rounded-lg transition-colors"
         >
-          {theme === 'dark' ? (
-            <Sun className="w-6 h-6 text-gita-light" />
-          ) : (
-            <Moon className="w-6 h-6 text-gita-primary" />
-          )}
-        </button>
+          <MessageSquare className="w-6 h-6 text-gita-primary dark:text-gita-light" />
+        </Button>
       </div>
+
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Share Your Feedback</DialogTitle>
+            <DialogDescription>
+              We value your thoughts and suggestions. Please share your feedback with us.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Textarea
+              placeholder="Enter your feedback here..."
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              className="min-h-[100px]"
+            />
+            <Button onClick={handleSubmitFeedback} className="w-full">
+              Submit Feedback
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </nav>
   );
 };

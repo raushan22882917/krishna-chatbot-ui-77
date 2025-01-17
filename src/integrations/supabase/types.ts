@@ -192,6 +192,27 @@ export type Database = {
           },
         ]
       }
+      feedback: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       medical_history: {
         Row: {
           condition: string

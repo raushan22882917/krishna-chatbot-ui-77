@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Bot, User } from "lucide-react";
+import { Bot, User, BookOpen, Flute } from "lucide-react";
 
 interface ChatMessageProps {
   content: string;
@@ -9,9 +9,7 @@ interface ChatMessageProps {
 }
 
 export const ChatMessage = ({ content, isUser, className }: ChatMessageProps) => {
-  // Function to highlight verses and chapters
   const highlightContent = (text: string) => {
-    // Regular expressions to match chapter/verse patterns
     const chapterPattern = /Chapter (\d+)/gi;
     const versePattern = /Verse (\d+)/gi;
     const sourcePattern = /Source: ([^.]+)/gi;
@@ -36,8 +34,16 @@ export const ChatMessage = ({ content, isUser, className }: ChatMessageProps) =>
       )}
     >
       {!isUser && (
-        <div className="flex-shrink-0 rounded-full bg-gita-soft p-2">
-          <Bot className="h-5 w-5 text-gita-primary" />
+        <div className="flex gap-2">
+          <div className="flex-shrink-0 rounded-full bg-gita-soft p-2">
+            <Bot className="h-5 w-5 text-gita-primary" />
+          </div>
+          <div className="flex-shrink-0 rounded-full bg-gita-soft p-2">
+            <BookOpen className="h-5 w-5 text-gita-primary" />
+          </div>
+          <div className="flex-shrink-0 rounded-full bg-gita-soft p-2">
+            <Flute className="h-5 w-5 text-gita-primary" />
+          </div>
         </div>
       )}
       <div
