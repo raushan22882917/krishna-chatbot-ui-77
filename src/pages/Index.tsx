@@ -18,6 +18,10 @@ interface Message {
 interface APIResponse {
   response: string;
   question?: string;
+  Book_Name?: string;
+  Chapter?: string;
+  verse?: string;
+  translation?: string;
 }
 
 const Index = () => {
@@ -100,7 +104,6 @@ const Index = () => {
         <AppSidebar onQuestionClick={handleQuestionClick} />
         <main className="flex-1 relative">
           <Navbar />
-          {messages.length === 0 && <BackgroundVideo />}
           <div className="min-h-screen relative z-10 pt-16">
             <div className="max-w-4xl mx-auto pt-8 pb-24">
               {messages.length === 0 ? (

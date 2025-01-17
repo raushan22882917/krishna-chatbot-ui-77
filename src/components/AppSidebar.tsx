@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { MessageCircle } from "lucide-react";
 
 interface AppSidebarProps {
   onQuestionClick: (question: string) => void;
@@ -24,25 +25,26 @@ export const AppSidebar = ({ onQuestionClick }: AppSidebarProps) => {
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 z-40 h-screen pt-16 transition-transform bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-r border-gita-soft dark:border-gray-700",
+        "fixed top-0 left-0 z-40 h-screen pt-16 transition-transform bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-r border-gita-soft dark:border-gray-700 w-64",
         open ? "translate-x-0" : "-translate-x-full"
       )}
     >
       <ScrollArea className="flex flex-col h-full px-4 pb-4">
         <div className="space-y-4 py-4">
           <div className="px-3 py-2">
-            <h2 className="mb-2 px-4 text-lg font-semibold text-gita-primary dark:text-gita-light">
+            <h2 className="mb-4 px-4 text-lg font-semibold text-gita-primary dark:text-gita-light">
               Suggested Questions
             </h2>
-            <div className="space-y-1">
+            <div className="space-y-2">
               {questions.map((question, index) => (
                 <Button
                   key={index}
                   variant="ghost"
-                  className="w-full justify-start text-gita-primary dark:text-gita-light hover:bg-gita-soft/50"
+                  className="w-full justify-start text-sm text-gita-primary dark:text-gita-light hover:bg-gita-soft/50 h-auto py-2 px-4"
                   onClick={() => onQuestionClick(question)}
                 >
-                  {question}
+                  <MessageCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="text-left">{question}</span>
                 </Button>
               ))}
             </div>
