@@ -15,27 +15,22 @@ interface Message {
   isUser: boolean;
 }
 
-const SUGGESTED_QUESTIONS = [
-  "What is the main message of Bhagavad Gita?",
-  "How can I find inner peace?",
-  "What is karma yoga?",
-  "How to overcome anger?",
-];
+interface APIResponse {
+  response: string;
+  question?: string;
+}
 
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
+  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([
+    "What is the main message of Bhagavad Gita?",
+    "How can I find inner peace?",
+    "What is karma yoga?",
+    "How to overcome anger?",
+  ]);
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
 
   const handleSendMessage = async (content: string) => {
     try {
@@ -48,7 +43,7 @@ const Index = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query: content }), // Changed from 'message' to 'query'
+        body: JSON.stringify({ query: content }),
       });
 
       if (!response.ok) {
@@ -56,7 +51,7 @@ const Index = () => {
         throw new Error(`HTTP error! status: ${response.status}, details: ${errorData}`);
       }
 
-      const data = await response.json();
+      const data: APIResponse = await response.json();
       
       setIsTyping(false);
       setMessages((prev) => [
@@ -66,6 +61,14 @@ const Index = () => {
           isUser: false,
         },
       ]);
+
+      // Update suggested questions if a new question is provided in the response
+      if (data.question) {
+        setSuggestedQuestions(prevQuestions => {
+          const newQuestions = [data.question!, ...prevQuestions.slice(0, 3)];
+          return Array.from(new Set(newQuestions)); // Remove duplicates
+        });
+      }
     } catch (error) {
       setIsTyping(false);
       let errorMessage = "Failed to get response. Please try again later.";
@@ -91,18 +94,10 @@ const Index = () => {
     setInputMessage(question);
   };
 
-  const toggleTheme = () => {
-    setIsDarkMode((prev) => !prev);
-  };
-
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
-        <AppSidebar
-          onQuestionClick={handleQuestionClick}
-          isDarkMode={isDarkMode}
-          onThemeToggle={toggleTheme}
-        />
+        <AppSidebar onQuestionClick={handleQuestionClick} />
         <main className="flex-1 relative">
           <Navbar />
           {messages.length === 0 && <BackgroundVideo />}
@@ -128,14 +123,14 @@ const Index = () => {
                   </div>
                   {!isTyping && messages.length > 0 && (
                     <SuggestedQuestions
-                      questions={SUGGESTED_QUESTIONS}
+                      questions={suggestedQuestions}
                       onQuestionClick={handleQuestionClick}
                     />
                   )}
                 </div>
               )}
             </div>
-            <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-white to-transparent pt-12 pb-4 dark:from-gray-900">
+            <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-white to-transparent pt-12 pb-4">
               <ChatInput 
                 onSend={handleSendMessage} 
                 disabled={isTyping} 
