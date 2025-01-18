@@ -14,7 +14,7 @@ import { ViewFullResponseDialog } from "./ViewFullResponseDialog";
 
 interface FeedbackDialogProps {
   isOpen: boolean;
-  onClose: () => void;
+  onOpenChange: (open: boolean) => void;
 }
 
 interface FeedbackEntry {
@@ -23,7 +23,7 @@ interface FeedbackEntry {
   created_at: string;
 }
 
-export const FeedbackDialog = ({ isOpen, onClose }: FeedbackDialogProps) => {
+export const FeedbackDialog = ({ isOpen, onOpenChange }: FeedbackDialogProps) => {
   const [selectedFeedback, setSelectedFeedback] = useState<string | null>(null);
 
   const { data: feedbackEntries, isLoading } = useQuery({
@@ -41,7 +41,7 @@ export const FeedbackDialog = ({ isOpen, onClose }: FeedbackDialogProps) => {
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={onClose}>
+      <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">

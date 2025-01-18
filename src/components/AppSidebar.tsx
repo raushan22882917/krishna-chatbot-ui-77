@@ -66,7 +66,7 @@ export const AppSidebar = ({ onQuestionClick }: AppSidebarProps) => {
           </div>
         </ScrollArea>
       </aside>
-      <FeedbackDialog open={showFeedback} onOpenChange={setShowFeedback} />
+      <FeedbackDialog isOpen={showFeedback} onOpenChange={setShowFeedback} />
     </>
   );
 };
