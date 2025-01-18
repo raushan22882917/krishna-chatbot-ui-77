@@ -17,8 +17,7 @@ interface Message {
 
 interface APIResponse {
   response: string;
-  question?: string;
-  suggested_questions?: string[];
+  suggested_questions: string[];
   Book_Name?: string;
   Chapter?: string;
   verse?: string;
@@ -29,12 +28,7 @@ const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
-  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([
-    "What is the main message of Bhagavad Gita?",
-    "How can I find inner peace?",
-    "What is karma yoga?",
-    "How to overcome anger?",
-  ]);
+  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([]);
   const { toast } = useToast();
 
   const handleSendMessage = async (content: string) => {
@@ -68,23 +62,10 @@ const Index = () => {
       ]);
 
       // Update suggested questions from API response
-      if (data.suggested_questions && data.suggested_questions.length > 0) {
-        setSuggestedQuestions(prevQuestions => {
-          // Create a new array with the suggested questions from API
-          const newQuestions = [
-            ...data.suggested_questions.slice(0, 3) // Take up to 3 suggested questions
-          ];
-          return Array.from(new Set(newQuestions)); // Remove duplicates
-        });
-      } else if (data.question) {
-        // Fallback to single question if no suggested_questions array
-        setSuggestedQuestions(prevQuestions => {
-          const newQuestions = [
-            data.question!,
-            ...prevQuestions.slice(0, 2) // Keep only the first 2 existing questions
-          ];
-          return Array.from(new Set(newQuestions)); // Remove duplicates
-        });
+      if (data.suggested_questions && Array.isArray(data.suggested_questions)) {
+        // Take only the first 3 questions and remove any duplicates
+        const newQuestions = Array.from(new Set(data.suggested_questions.slice(0, 3)));
+        setSuggestedQuestions(newQuestions);
       }
     } catch (error) {
       setIsTyping(false);
