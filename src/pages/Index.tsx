@@ -42,7 +42,11 @@ const Index = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query: content }),
+        body: JSON.stringify({ 
+          query: content,
+          generate_suggestions: true, // Add this flag to indicate we want related questions
+          context: "bhagavad_gita_yoga_sutras" // Add context to get relevant suggestions
+        }),
       });
 
       if (!response.ok) {
@@ -63,9 +67,22 @@ const Index = () => {
 
       // Update suggested questions from API response
       if (data.suggested_questions && Array.isArray(data.suggested_questions)) {
-        // Take only the first 3 questions and remove any duplicates
-        const newQuestions = Array.from(new Set(data.suggested_questions.slice(0, 3)));
-        setSuggestedQuestions(newQuestions);
+        // Filter questions to ensure they're related to Gita or Yoga Sutras
+        const relevantQuestions = data.suggested_questions.filter(question => 
+          question.toLowerCase().includes('gita') || 
+          question.toLowerCase().includes('krishna') ||
+          question.toLowerCase().includes('yoga') ||
+          question.toLowerCase().includes('dharma') ||
+          question.toLowerCase().includes('karma')
+        );
+        
+        // Take only the first 3 relevant questions
+        const newQuestions = Array.from(new Set(relevantQuestions)).slice(0, 3);
+        setSuggestedQuestions(newQuestions.length > 0 ? newQuestions : [
+          "What does the Gita say about this topic?",
+          "How does this relate to Karma Yoga?",
+          "Can you explain this from Krishna's perspective?"
+        ]);
       }
     } catch (error) {
       setIsTyping(false);
@@ -119,7 +136,7 @@ const Index = () => {
                       </div>
                     )}
                   </div>
-                  {!isTyping && messages.length > 0 && (
+                  {!isTyping && messages.length > 0 && suggestedQuestions.length > 0 && (
                     <SuggestedQuestions
                       questions={suggestedQuestions}
                       onQuestionClick={handleQuestionClick}
