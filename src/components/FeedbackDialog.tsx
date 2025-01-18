@@ -1,27 +1,33 @@
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { MessageSquare } from "lucide-react";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { ViewFullResponseDialog } from "./ViewFullResponseDialog";
 
 interface FeedbackDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-interface Feedback {
+interface FeedbackEntry {
   id: string;
   content: string;
   created_at: string;
 }
 
-export const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
-  const { data: feedbacks, isLoading } = useQuery({
-    queryKey: ["feedbacks"],
+export const FeedbackDialog = ({ isOpen, onClose }: FeedbackDialogProps) => {
+  const [selectedFeedback, setSelectedFeedback] = useState<string | null>(null);
+
+  const { data: feedbackEntries, isLoading } = useQuery({
+    queryKey: ["feedback"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("feedback")
@@ -29,46 +35,57 @@ export const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data as Feedback[];
+      return data as FeedbackEntry[];
     },
   });
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-gita-primary dark:text-gita-light">
-            User Feedback
-          </DialogTitle>
-        </DialogHeader>
-        <ScrollArea className="h-[60vh] pr-4">
-          <div className="space-y-4">
+    <>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5" />
+              User Feedback
+            </DialogTitle>
+          </DialogHeader>
+          <div className="mt-4 space-y-4 max-h-[60vh] overflow-y-auto">
             {isLoading ? (
-              <p className="text-center text-gita-primary dark:text-gita-light">
-                Loading feedback...
-              </p>
-            ) : feedbacks?.length === 0 ? (
-              <p className="text-center text-gita-primary dark:text-gita-light">
-                No feedback yet
-              </p>
+              <p className="text-center text-muted-foreground">Loading feedback...</p>
+            ) : feedbackEntries?.length === 0 ? (
+              <p className="text-center text-muted-foreground">No feedback yet</p>
             ) : (
-              feedbacks?.map((feedback) => (
+              feedbackEntries?.map((entry) => (
                 <div
-                  key={feedback.id}
-                  className="rounded-lg border border-gita-soft p-4 dark:border-gray-700"
+                  key={entry.id}
+                  className="p-4 rounded-lg border bg-card text-card-foreground shadow-sm"
                 >
-                  <p className="text-gita-primary dark:text-gita-light">
-                    {feedback.content}
-                  </p>
-                  <p className="mt-2 text-sm text-gita-primary/70 dark:text-gita-light/70">
-                    {new Date(feedback.created_at).toLocaleDateString()}
-                  </p>
+                  <div className="flex justify-between items-start mb-2">
+                    <p className="text-sm text-muted-foreground">
+                      {format(new Date(entry.created_at), "PPpp")}
+                    </p>
+                  </div>
+                  <p className="text-sm line-clamp-3">{entry.content}</p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => setSelectedFeedback(entry.content)}
+                  >
+                    View Full Response
+                  </Button>
                 </div>
               ))
             )}
           </div>
-        </ScrollArea>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      <ViewFullResponseDialog
+        isOpen={!!selectedFeedback}
+        onClose={() => setSelectedFeedback(null)}
+        content={selectedFeedback || ""}
+      />
+    </>
   );
 };
