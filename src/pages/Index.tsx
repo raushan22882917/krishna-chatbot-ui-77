@@ -18,6 +18,7 @@ interface Message {
 interface APIResponse {
   response: string;
   question?: string;
+  suggested_questions?: string[];
   Book_Name?: string;
   Chapter?: string;
   verse?: string;
@@ -66,10 +67,18 @@ const Index = () => {
         },
       ]);
 
-      // Update suggested questions if a new question is provided in the response
-      if (data.question) {
+      // Update suggested questions from API response
+      if (data.suggested_questions && data.suggested_questions.length > 0) {
         setSuggestedQuestions(prevQuestions => {
-          // Create a new array with the new question and existing questions
+          // Create a new array with the suggested questions from API
+          const newQuestions = [
+            ...data.suggested_questions.slice(0, 3) // Take up to 3 suggested questions
+          ];
+          return Array.from(new Set(newQuestions)); // Remove duplicates
+        });
+      } else if (data.question) {
+        // Fallback to single question if no suggested_questions array
+        setSuggestedQuestions(prevQuestions => {
           const newQuestions = [
             data.question!,
             ...prevQuestions.slice(0, 2) // Keep only the first 2 existing questions
