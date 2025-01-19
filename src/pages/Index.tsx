@@ -113,7 +113,7 @@ const Index = () => {
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <AppSidebar onQuestionClick={handleQuestionClick} />
-        <main className="flex-1 relative">
+        <main className="flex-1 relative transition-all duration-300">
           <Navbar />
           {messages.length === 0 && <BackgroundVideo />}
           <div className="min-h-screen relative z-10 pt-16">
